@@ -13,7 +13,7 @@
 - Sprint + milestones + tasks (`context/specs/sprint-plan.md`, `task-breakdown.md`)
 - Coding standards (`context/code-standards.md`)
 - Tech selection · folder structure · architecture review · domain/risks/use-cases
-- Product/RAG/AI docs + skills · Team Compass🧭
+- Product/RAG/AI docs + skills · Team-Compass-2026
 - Better Auth locked · Neon · OpenAI
 - n8n MCP + Telegram secrets (gitignored)
 
@@ -32,7 +32,7 @@
 
 ## Architecture Decisions
 
-- Career GPS · Team Compass🧭 · Education Equity
+- Career GPS · Team-Compass-2026 · Education Equity
 - Neon + pgvector · OpenAI · Better Auth email/password
 - MVP: profile + recommend + skill gap + RAG roadmap/chat
 - n8n + Telegram = optional ops
