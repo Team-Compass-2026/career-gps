@@ -1,4 +1,74 @@
-/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-active: #1e40af;
+  --primary-soft: #eff6ff;
+  --teal: #14b8a6;
+  --amber: #f59e0b;
+  --success: #16a34a;
+  --error: #dc2626;
+}
+
+.dark {
+  --background: #0b1120;
+  --surface: #111827;
+  --surface-muted: #172033;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border: #263449;
+  --border-strong: #334155;
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+  --primary-active: #3b82f6;
+  --primary-soft: #172554;
+  --teal: #2dd4bf;
+  --amber: #fbbf24;
+  --success: #4ade80;
+  --error: #f87171;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sans font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .container-career {
+    @apply mx-auto max-w-content px-margin-mobile tablet:px-margin-tablet desktop:px-margin-desktop;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-on-primary shadow-card transition-all duration-normal hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-elevated focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border-strong bg-transparent px-6 py-3 text-sm font-semibold text-text-primary transition-all duration-normal hover:-translate-y-0.5 hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .card {
+    @apply rounded-xl border border-border bg-surface shadow-subtle transition-all duration-normal hover:-translate-y-1 hover:shadow-card;
+  }
+}
