@@ -17,7 +17,7 @@
 | Database | **Neon** PostgreSQL + Prisma | Users, profiles, careers, skills, roadmaps, chat |
 | Vectors | **pgvector** on Neon | Structured data store |
 | Search | Postgres FTS + hybrid vector | Keyword + semantic |
-| AI | Vercel AI SDK + **OpenAI** (`gpt-4o-mini` + `text-embedding-3-small`) | Coach + roadmap + embeddings |
+| AI | `lib/ai/provider.ts` (provider‑agnostic abstraction: pcore‑brain / openai‑compatible) + env‑driven switching | Model‑selectable via `AI_BRAIN_MODEL_POOL` / `AI_BRAIN_MODEL`; test endpoint `app/api/ai/chat/route.ts` |
 | Hosting | **Vercel** + Neon | Hackathon deploy |
 
 Template reference: `docs/architecture/21-next-hono-prisma-query.md`

@@ -15,9 +15,9 @@ const FOOTER_COLUMNS = [
     title: "Support",
     links: [
       { label: "Career Coach", href: "/coach" },
-      { label: "Mentors", href: "/coach" },
-      { label: "FAQ", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Mentors", href: "/mentors" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];

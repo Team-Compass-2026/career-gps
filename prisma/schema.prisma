@@ -1,0 +1,205 @@
+// Career GPS — Prisma schema (PostgreSQL / Neon)
+// Better Auth models follow @better-auth/prisma-adapter defaults.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Better Auth (auth core)
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  profile       Profile?
+  conversations CoachConversation[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String  @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Domain — Career GPS
+// ---------------------------------------------------------------------------
+
+model Profile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  fullName      String?
+  currentRole   String?
+  targetRole    String?
+  experience    Int?
+  education     String?
+  industry      String?
+  weeklyHours   Int?
+  timeline      String?
+  skills        Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals     Goal[]
+  progress  Progress[]
+  userSkills UserSkill[]
+}
+
+model Career {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  summary     String
+  description String
+  industry    String
+  level       String
+  demandLevel String
+  salaryMin   Int?
+  salaryMax   Int?
+  growth      String?
+  createdAt   DateTime @default(now())
+
+  skills    CareerSkill[]
+  resources Resource[]
+}
+
+model CareerSkill {
+  id        String @id @default(cuid())
+  careerId  String
+  skillId   String
+  weight    Float  @default(1)
+  importance String
+
+  career Career @relation(fields: [careerId], references: [id], onDelete: Cascade)
+
+  @@unique([careerId, skillId])
+}
+
+model UserSkill {
+  id         String @id @default(cuid())
+  profileId  String
+  name       String
+  proficiency Int   @default(1)
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, name])
+}
+
+model Goal {
+  id        String   @id @default(cuid())
+  profileId String
+  title     String
+  targetDate DateTime?
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Progress {
+  id         String   @id @default(cuid())
+  profileId  String
+  week       Int
+  hoursLogged Float   @default(0)
+  note       String?
+  createdAt  DateTime @default(now())
+
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Resource {
+  id        String @id @default(cuid())
+  careerId  String
+  title     String
+  kind      String
+  url       String
+  free      Boolean @default(true)
+  createdAt DateTime @default(now())
+
+  career Career @relation(fields: [careerId], references: [id], onDelete: Cascade)
+}
+
+model Mentor {
+  id         String   @id @default(cuid())
+  name       String
+  role       String
+  org        String
+  matchScore Int      @default(0)
+  email      String?
+  featured   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model CoachConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  conversationId String
+  role       String
+  content    String   @db.Text
+  citations  Json?
+  createdAt  DateTime @default(now())
+
+  conversation CoachConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}

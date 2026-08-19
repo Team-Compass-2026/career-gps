@@ -187,17 +187,28 @@ function PulseDot({ curve, color }: { curve: THREE.CatmullRomCurve3; color: stri
   );
 }
 
-function CompassScene({ colors }: { colors: ThemeColors }) {
+function CompassScene({
+  colors,
+  pointer,
+}: {
+  colors: ThemeColors;
+  pointer: { current: { x: number; y: number } };
+}) {
   const group = useRef<THREE.Group>(null);
+  const baseSpin = useRef(0);
   const curve = useMemo(
     () => new THREE.CatmullRomCurve3(NODE_POINTS.map((p) => new THREE.Vector3(p[0], p[1], p[2]))),
     []
   );
 
   useFrame((_, delta) => {
-    if (group.current) {
-      group.current.rotation.y += delta * 0.12;
-    }
+    if (!group.current) return;
+    baseSpin.current += delta * 0.12;
+    const targetY = baseSpin.current + pointer.current.x * 0.35;
+    const targetX = -pointer.current.y * 0.22;
+    const k = Math.min(delta * 5, 1);
+    group.current.rotation.y += (targetY - group.current.rotation.y) * k;
+    group.current.rotation.x += (targetX - group.current.rotation.x) * k;
   });
 
   return (
@@ -205,6 +216,10 @@ function CompassScene({ colors }: { colors: ThemeColors }) {
       <ambientLight intensity={0.8} />
       <directionalLight position={[4, 6, 9]} intensity={1.6} />
       <group ref={group}>
+        <mesh position={[0, 0, -0.7]}>
+          <circleGeometry args={[1.9, 48]} />
+          <meshBasicMaterial color={colors.teal} transparent opacity={0.07} depthWrite={false} />
+        </mesh>
         <CompassRing color={colors.ring} />
         <Line points={NODE_POINTS} color={colors.path} lineWidth={2.5} transparent opacity={0.9} />
         {NODE_POINTS.map((p, i) => (
@@ -216,6 +231,7 @@ function CompassScene({ colors }: { colors: ThemeColors }) {
           <meshStandardMaterial color={colors.primary} emissive={colors.teal} emissiveIntensity={0.45} />
         </mesh>
         <pointLight color={colors.teal} intensity={2.5} distance={8} decay={2} />
+        <pointLight color={colors.primary} intensity={1.6} distance={6} decay={2} position={[0, 0, 1.5]} />
         <Sparkles count={42} scale={[6.5, 4.5, 2.2]} size={1.8} speed={0.35} opacity={0.45} color={colors.sparkle} />
       </group>
     </>
@@ -277,6 +293,7 @@ export function CompassCanvas() {
   const [mounted, setMounted] = useState(false);
   const isDesktop = useMedia("(min-width: 1024px)");
   const reduced = useMedia("(prefers-reduced-motion: reduce)");
+  const pointer = useRef({ x: 0, y: 0 });
 
   useEffect(() => setMounted(true), []);
 
@@ -286,7 +303,14 @@ export function CompassCanvas() {
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary-soft/80 via-surface to-teal-soft/50 shadow-card">
-      <div className="relative aspect-square w-full lg:aspect-[5/6]">
+      <div
+        className="relative aspect-square w-full lg:aspect-[5/6]"
+        onPointerMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          pointer.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          pointer.current.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        }}
+      >
         {showCanvas ? (
           <Suspense fallback={<StaticPathway />}>
             <div className="absolute inset-0">
@@ -294,11 +318,12 @@ export function CompassCanvas() {
                 dpr={[1, 2]}
                 camera={{ position: [0, 0, 8.6], fov: 42 }}
                 gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+                shadows={false}
                 style={{ pointerEvents: "none" }}
                 aria-label="Animated 3D career pathway showing progress from your goal through skills, projects and experience to your career destination"
                 role="img"
               >
-                <CompassScene colors={colors} />
+                <CompassScene colors={colors} pointer={pointer} />
               </Canvas>
             </div>
           </Suspense>

@@ -23,3 +23,12 @@ coverage/
 
 # Orchestra / local plans
 .cursor/orchestra-plan.md
+
+# Tool noise
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
+*.tsbuildinfo
+
+/lib/generated/prisma

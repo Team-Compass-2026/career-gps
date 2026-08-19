@@ -60,12 +60,13 @@ const MENTORS = [
 ];
 
 type ChatMessage = {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  citation?: string;
-  action?: { label: string; href: string };
-};
+    id: string;
+    role: "user" | "assistant";
+    content: string;
+    citation?: string;
+    action?: { label: string; href: string };
+    timestamp?: string;
+  };
 
 type CoachReply = {
   content: string;
@@ -241,7 +242,15 @@ export default function CoachPage() {
     const content = raw.trim();
     if (!content || isTyping) return;
     const reply = getCoachReply(content);
-    setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "user", content }]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        role: "user",
+        content,
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      },
+    ]);
     setInput("");
     inputRef.current?.focus();
     setIsTyping(true);
@@ -254,6 +263,7 @@ export default function CoachPage() {
           content: reply.content,
           citation: reply.citation,
           action: reply.action,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
       setIsTyping(false);
@@ -327,10 +337,15 @@ export default function CoachPage() {
                         <ArrowRight className="h-4 w-4" aria-hidden="true" />
                       </Link>
                     ) : null}
+                    {message.timestamp ? (
+                      <span className="mt-1.5 block px-0.5 text-[10px] text-muted-foreground/70">
+                        {message.timestamp}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
               ) : (
-                <div key={message.id} className="flex justify-end">
+                <div key={message.id} className="flex flex-col items-end gap-1">
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -339,6 +354,11 @@ export default function CoachPage() {
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
                   </motion.div>
+                  {message.timestamp ? (
+                    <span className="px-1 text-[10px] text-muted-foreground/70">
+                      {message.timestamp}
+                    </span>
+                  ) : null}
                 </div>
               ),
             )}

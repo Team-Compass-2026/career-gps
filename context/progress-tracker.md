@@ -37,24 +37,33 @@
   GPS design system (Compass Blue / Teal / Amber, Plus Jakarta Sans, dark mode)
 - Root layout with font, metadata, theme color and sonner Toaster; landing and
   auth/dashboard skeleton pages (profile, recommend, gaps, roadmap, coach)
-- All pages built (parallel subagents): landing (hero + Three.js compass canvas
-  + benefits + how-it-works + final CTA), auth sign-in/sign-up, dashboard shell
-  (sidebar layout), profile intake, career recommendations (fit %), skill gaps,
-  roadmap timeline, coach chat
-- Animation stack installed: `three` + `@react-three/fiber` + `@react-three/drei`
-  + `motion` (framer-motion successor); theme provider (next-themes, light
-  default) + theme toggle wired
 - Problem statistics validated (Gen Z, FE Choices, JICA, UNDP, Myanmar Jobs
   reports)
 - Tech selection · architecture review · domain/risks/use-cases/user-stories ·
   sprint + task breakdown · coding standards
-- Better Auth locked · Neon · OpenAI · no secrets in git (n8n/Telegram tokens
-  gitignored)
+- Better Auth locked · Neon · AI provider abstraction (`lib/ai/provider.ts`, pcore‑brain / openai‑compatible, switchable via `AI_PROVIDER` env) + server brain config `/etc/career-gps-brain.env` (0600, root‑only)
+- Public pages shipped: `/faq` (accordion FAQ, 7 questions), `/contact` (client
+  form w/ sonner toast + contact channels), `/mentors` (6 mentor cards with
+  match badges, matching explainer, CTA); header + footer nav wired to
+  `/mentors`, `/faq`, `/contact` (previously `/coach` / `#`); all three routes
+  build as static (verified `bun run build`)
+- Backend scaffolding in place: `prisma/schema.prisma` (Better Auth core +
+  domain models: Profile, Career, CareerSkill, UserSkill, Goal, Progress,
+  Resource, Mentor, CoachConversation, ChatMessage) + `prisma.config.ts` +
+  `@prisma/adapter-pg` driver; `lib/prisma.ts` singleton; `lib/auth.ts` Better
+  Auth server config (email/password, basePath `/api/auth`); `lib/session.ts`
+  helpers; `/api/auth/[...all]` route; `proxy.ts` (Next 16 proxy — replaces
+  middleware) redirecting unauthenticated dashboard paths to `/sign-in`;
+  `bunx prisma generate` ✅ and `bun run build` ✅ (14 routes)
+- Landing polish shipped (parallel agent): all three context images
+  (`team-discussion.jpg`, `career-coaching.jpg`, `mentor-session.jpg`) used
+  across hero / benefits / final-cta; card hover-lift + accent reveal +
+  `active:` press feedback + `whileInView` scroll animations + reduced-motion
+  respect; compass canvas perf guard (`shadows={false}`)
+- Coach chat upgraded: per-message timestamps on user + assistant bubbles
 
 ## In Progress
 
-- Landing + auth + dashboard pages built with demo data; awaiting user review
-  of visuals/animation before wiring Better Auth + Prisma + real data
 - Decide whether the existing dashboard skeleton pages stay as MVP routes or
   are replaced by the onboarding-first flow from `product-spec.md` §11.2
 - Reconcile demo prototype (mentor flow, `prototype-spec.md`) with the
@@ -65,7 +74,7 @@
 - MVP vertical: auth → profile intake → career recommend (explained) → skill
   gaps → roadmap → coach (cite-or-abstain) → progress
 - Seed curated careers (10–20, incl. Data Analyst) + career_skills + resources
-- Wire Better Auth sign-in/sign-up + Prisma schema + Neon DB
+- Landing page per `specs/landing-page-plan.md` with new copy
 - Run accessibility review + Alex demo path
 
 ## Open Questions
