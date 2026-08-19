@@ -144,8 +144,8 @@ stack:
   databases:
     - postgresql
     - sqlite
-  package_manager: pnpm
-  runtime: node
+  package_manager: bun
+  runtime: bun
 
 environments:
   development:
@@ -259,20 +259,20 @@ const mutation = useMutation({
 
 ```bash
 # 1. Create Next.js app
-pnpm create next-app@latest my-app --typescript --tailwind --app --src-dir
+bun create next-app@latest my-app --typescript --tailwind --app
 cd my-app
 
 # 2. Install core deps
-pnpm add hono @hono/zod-validator zod
-pnpm add @tanstack/react-query
-pnpm add prisma @prisma/client --save-dev
-pnpm dlx prisma init
+bun add hono @hono/zod-validator zod
+bun add @tanstack/react-query
+bun add prisma @prisma/client -d
+bunx prisma init
 
 # 3. Init shadcn/ui
-pnpm dlx shadcn@latest init
-pnpm dlx shadcn@latest add button card dialog table form
+bunx shadcn@latest init
+bunx shadcn@latest add button card dialog table form
 
-# 4. Set up Hono API handler in src/app/api/[[...route]]/route.ts
+# 4. Set up Hono API handler in app/api/[[...route]]/route.ts
 ```
 
 ## Key Dependencies

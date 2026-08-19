@@ -12,7 +12,7 @@
 | US-4 | Select target career | Must | 2 |
 | US-5 | Skill gap analysis | Must | 5 |
 | US-6 | Personalized roadmap | Must | 8 |
-| US-7 | AI Career Assistant (RAG) | Must | 8 |
+| US-7 | Career Assistant (structured data) | Must | 8 |
 | US-8 | Track progress | Must | 5 |
 | US-9 | Curator seed (10–20 careers) | Should | 5 |
 

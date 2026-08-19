@@ -39,4 +39,4 @@ Split if combining: auth+structured, dataset ingest+UI chrome, fit engine+chat t
 1. Finish enterprise stories/acceptance (now)  
 2. Optional CSV samples  
 3. Scaffold only on explicit build request  
-4. P0 vertical: auth → profile → dataset → recommend → gap → RAG → chat  
+4. P0 vertical: auth → profile → dataset → recommend → gap → chat  

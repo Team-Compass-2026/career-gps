@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A Personalised Career Companion that stays with you until you reach the milestone",
   "private": true,
+  "packageManager": "bun@1.3.14",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,23 +14,24 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "next": "14.2.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "better-auth": "^0.21.5",
-    "@prisma/client": "^5.21.1",
-    "zod": "^3.23.8"
+    "next": "16.3.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "better-auth": "^1.7.1",
+    "@prisma/client": "^7.9.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.4",
-    "postcss": "^8.4.38",
-    "prisma": "^5.21.1",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.5.2"
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "autoprefixer": "^10.5.4",
+    "eslint": "^10.8.1",
+    "eslint-config-next": "^16.3.1",
+    "postcss": "^8.5.26",
+    "prisma": "^7.9.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2"
   }
 }

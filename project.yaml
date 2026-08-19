@@ -63,8 +63,8 @@ stack:
     - neon
   infrastructure:
     - vercel
-  package_manager: pnpm
-  runtime: node
+  package_manager: bun
+  runtime: bun
 
 environments:
   development:

@@ -2,7 +2,7 @@
 
 ## Goal
 
-When build starts: profile → career recommend → skill gap → RAG roadmap/chat
+When build starts: profile → career recommend → skill gap → structured roadmap/chat
 with Better Auth — demo Alex persona end-to-end.
 
 ## In scope (first build)
@@ -24,7 +24,7 @@ with Better Auth — demo Alex persona end-to-end.
 
 1. Alex demo flow completes without unsourced course URLs.  
 2. Fit scores labeled as guidance.  
-3. Empty RAG → abstain.  
+3. Empty structured → abstain.  
 4. Unauthenticated chat rejected.  
 
 ## Skills to load when building

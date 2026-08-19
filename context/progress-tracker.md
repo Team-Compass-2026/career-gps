@@ -11,6 +11,8 @@
 
 ## Completed
 
+- Project scaffolded and building: Next.js 16 + React 19 + Tailwind 4 + Prisma 7 + Zod 4
+- Package manager migrated: Bun 1.3 (was pnpm/npm)
 - Sprint + milestones + tasks (`context/specs/sprint-plan.md`, `task-breakdown.md`)
 - Coding standards (`context/code-standards.md`)
 - Tech selection · folder structure · architecture review · domain/risks/use-cases
@@ -59,7 +61,7 @@
 - Career GPS · Team Compass 2026 · Education Equity
 - Neon + PostgreSQL (no pgvector for now — structured data only)
 - Better Auth for authentication
-- Next.js 14 with App Router
+- Next.js 16 (App Router) + Bun 1.3 + TypeScript 7
 - No RAG for MVP — structured career→skills→resources dataset
 - MVP: profile + career recommend + skill gap + roadmap + progress tracking
 - 6-page clickable web prototype for demo

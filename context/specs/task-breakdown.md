@@ -3,7 +3,7 @@
 **Team Compass🧭 · Estimates S/M/L · Depends-on listed**
 
 ## M1 Shell + identity + profile
-- T1.1 Scaffold Next + pnpm + env stubs — **M**
+- T1.1 Scaffold Next + Bun + env stubs — **M**
 - T1.2 Neon + Prisma User/Profile — **M** ← T1.1
 - T1.3 Better Auth email + session — **M** ← T1.2
 - T1.4 Sign-up/in UI (US-1) — **S** ← T1.3

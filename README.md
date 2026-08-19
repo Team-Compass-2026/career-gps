@@ -57,12 +57,12 @@ LANDING → ASSESSMENT → ASSESSMENT RESULT → CAREER PATHWAY → NEXT MOVE �
 6. **Progress** — How the user is progressing toward career goal
 
 ## Technology Stack
-- **Framework:** Next.js (App Router) + TypeScript
-- **API:** Hono on Next route handlers
-- **UI:** Tailwind + shadcn/ui
+- **Framework:** Next.js 16 (App Router) + TypeScript 7
+- **Runtime:** Bun 1.3 (package manager + runtime)
+- **UI:** Tailwind CSS 4 + shadcn/ui
 - **Client data:** TanStack Query
-- **Auth:** Better Auth (email/password MVP)
-- **Database:** Neon PostgreSQL + Prisma
+- **Auth:** Better Auth 1.7 (email/password MVP)
+- **Database:** Neon PostgreSQL + Prisma 7
 - **Vectors:** pgvector on Neon for RAG embeddings store
 - **AI:** Vercel AI SDK + OpenAI (gpt-4o-mini + text-embedding-3-small)
 - **Hosting:** Vercel + Neon
@@ -91,25 +91,25 @@ career-gps/
 ├── scripts/ingest-knowledge.ts  # post-scaffold
 ├── manifest.json           ← PWA manifest
 ├── favicon.ico
-├── next-config.js
-├── tailwind-config.js
+├── next.config.js
+├── tailwind.config.js
 ├── package.json
 └── .env.example
 ```
 
 ## Development
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (Bun)
+bun install
 
 # Run development server
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
+bun run build
 
 # Start production server
-npm start
+bun run start
 ```
 
 ## Key Context Files (Updated to Career GPS Branding)

@@ -9,7 +9,7 @@
 | Embeddings | OpenAI `text-embedding-3-small` |
 | Better Auth | Email + password only (OAuth later) |
 | Host | Vercel |
-| Package manager | pnpm |
+| Package manager | Bun 1.3 |
 | Ops | n8n + Telegram optional |
 
 ## Env names

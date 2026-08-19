@@ -14,6 +14,6 @@
 - Scope creep · n8n token leakage (secrets already gitignored)
 
 ## Mitigation themes
-Seed before demo · guidance labels · rate-limit chat · published-only RAG · rotate n8n if exposed
+Seed before demo · guidance labels · rate-limit chat · structured-only · rotate n8n if exposed
 
 Full table: enterprise risk-analysis phase (2026-08-10).
