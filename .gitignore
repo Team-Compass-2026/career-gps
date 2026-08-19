@@ -1,0 +1,25 @@
+# Git
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Secrets / local MCP
+.cursor/*.env
+.cursor/secrets/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Node (when app is scaffolded)
+node_modules/
+.next/
+dist/
+coverage/
+*.log
+
+# Orchestra / local plans
+.cursor/orchestra-plan.md

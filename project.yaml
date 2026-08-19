@@ -1,0 +1,152 @@
+# ──────────────────────────────────────────────
+# Career GPS — Team Compass🧭 (DEEP Hackathon)
+# Track: T2 — Education Equity
+# ──────────────────────────────────────────────
+
+project:
+  name: career-gps
+  slug: career-gps
+  display_name: Career GPS
+  type: web
+  category: education-equity
+  owner: Team Compass🧭
+
+  description: >
+    AI-powered career navigation for young people: personalized roadmaps,
+    skill-gap analysis, curated career/skills dataset, and RAG-grounded
+    guidance. DEEP Hackathon T2 Education Equity — Team Compass🧭.
+
+version:
+  current: 1.0.0
+  channel: dev
+  release_name: genesis
+  build_number: 001
+
+theme:
+  name: human-led-navigation
+  defaultMode: light
+  supportedModes:
+    - light
+    - dark
+
+lifecycle:
+  stage: design
+  status: active
+  started: 2026-08-10
+  updated: 2026-08-10
+
+team:
+  lead: Team Compass🧭
+  members: []
+
+repository:
+  url: ""
+  branch: main
+  provider: github
+  visibility: private
+
+stack:
+  languages:
+    - typescript
+  frameworks:
+    - nextjs
+    - hono
+    - ai-sdk
+    - openai
+    - better-auth
+    - prisma
+    - react-query
+    - shadcn
+  databases:
+    - postgresql
+    - pgvector
+    - neon
+  infrastructure:
+    - vercel
+  package_manager: pnpm
+  runtime: node
+
+environments:
+  development:
+    url: http://localhost:3000
+    branch: main
+    auto_deploy: false
+  staging:
+    url: ""
+    branch: main
+    auto_deploy: false
+  production:
+    url: ""
+    branch: main
+    auto_deploy: false
+
+integrations:
+  ci_cd: none
+  monitoring: none
+  analytics: none
+  error_tracking: none
+  logs: none
+
+ai:
+  assistant: cursor
+  context_dir: context/
+  entry_point: AGENTS.md
+  rules: []
+
+infrastructure:
+  cloud: vercel
+  regions: []
+  dns: none
+  cdn: none
+
+security:
+  authentication: better-auth
+  authorization: rbac
+  audit_log: false
+  secrets_manager: none
+
+compliance:
+  standards: []
+  data_region: ""
+
+observability:
+  health_endpoint: /health
+  metrics: false
+  tracing: false
+  alerting:
+    pagerduty: false
+    slack: false
+    email: false
+
+backup:
+  strategy: none
+  retention_days: 30
+  schedule: daily
+
+disaster_recovery:
+  rpo_minutes: 60
+  rto_minutes: 120
+  plan: none
+
+orchestra:
+  route: core
+  max_iterations: 8
+  plan_only: false
+  token_budgets:
+    planner: 10000
+    implementer: 30000
+    verifier: 15000
+    reviewer: 8000
+    cycle: 63000
+  phases: []
+
+_pcore:
+  version: 2
+  initialized: 2026-08-10T14:11:00Z
+  last_orchestration: null
+  orchestration_count: 0
+  quality_gate_passes: 0
+  quality_gate_failures: 0
+  agent_invocations: {}
+  version_history: []
+  lifecycle_transitions: []
