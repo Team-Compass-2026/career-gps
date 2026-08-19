@@ -16,7 +16,7 @@ until the user explicitly asks.**
 
 ## When to Split Work
 
-Split if combining: auth+RAG, dataset ingest+UI chrome, fit engine+chat tools.
+Split if combining: auth+structured, dataset ingest+UI chrome, fit engine+chat tools.
 
 ## System Design Triggers
 

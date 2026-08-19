@@ -10,7 +10,7 @@
 | UC-4 | Select target career | Learner |
 | UC-5 | Skill gap analysis (T0) | Learner |
 | UC-6 | Personalized roadmap | Learner |
-| UC-7 | Ask AI Career Assistant (RAG) | Learner |
+| UC-7 | Ask Career Assistant | Learner |
 | UC-8 | Track progress | Learner |
 | UC-9 | Curator seed knowledge | Curator |
 
@@ -23,6 +23,6 @@ Career ↔ Skill via CareerSkill · Resource · KnowledgeChunk (published, no PI
 
 ## Architecture
 
-- T0 SQL: fit + gaps · T1/T2: RAG Q&A · Cite-or-abstain · Session on all mutations
+- T0 SQL: fit + gaps · T1/T2: Q&A · Cite-or-abstain · Session on all mutations
 
 Full architect write-up: enterprise phase use-cases (2026-08-10).

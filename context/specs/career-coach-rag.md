@@ -1,4 +1,4 @@
-# Spec: Career Coach chat + RAG retrieve (MVP slice)
+# Spec: Career Coach chat + structured data retrieve (MVP slice)
 
 ## Goal
 

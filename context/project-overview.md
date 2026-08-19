@@ -156,7 +156,7 @@ Student ─────────┼── Mentorship
 2. Career assessment → 3–5 recommendations with explanations
 3. Select target career → skill-gap table
 4. Personalized roadmap (phased, time-aware)
-5. AI Career Assistant (RAG) for follow-up questions / roadmap tweaks *[note: RAG not active for now]*
+5. AI Career Assistant (structured data) for follow-up questions / roadmap tweaks
 6. Progress: mark skills / milestones complete
 
 **Demo persona: Alex** (CS student, basic Python/HTML/Excel, 10h/week, Data Analyst goal).

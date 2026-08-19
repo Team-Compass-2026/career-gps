@@ -7,7 +7,7 @@
 | Sprint | Goal | Stories |
 |--------|------|---------|
 | **S1** | Auth, profile, seed, recommend, select | US-1, 2, 9, 3, 4 |
-| **S2** | Gaps, roadmap, RAG coach, progress, Alex demo | US-5, 6, 7, 8 |
+| **S2** | Gaps, roadmap, progress, Alex demo | US-5, 6, 7, 8 |
 
 ## Milestones
 

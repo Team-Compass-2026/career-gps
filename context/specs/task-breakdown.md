@@ -30,7 +30,7 @@
 
 ## M5 Coach + progress + demo
 - T5.1 Hybrid retrieve + streaming coach (US-7) — **L** ← T2.3, T4.2
-- T5.2 Cite-or-abstain + empty RAG — **M** ← T5.1
+- T5.2 Cite-or-abstain + empty dataset — **M** ← T5.1
 - T5.3 Progress marks (US-8) — **M** ← T4.2
 - T5.4 Full Alex rehearsal — **M** ← T5.2, T5.3
 - T5.5 Vercel + Neon deploy — **S** ← T5.4

@@ -27,7 +27,7 @@
 - Email/password MVP only — no parallel auth libs
 - Coach tools: own profile/roadmap + published corpus
 
-## AI / RAG
+## AI / Structured Data
 - Vercel AI SDK; OpenAI mini + embedding-3-small
 - **Cite-or-abstain** for courses/employers/salaries/jobs
 - Fit/gap/roadmap math in `services/`; LLM explains only

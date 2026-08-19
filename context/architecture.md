@@ -10,7 +10,7 @@
 | Client data | TanStack Query | Server state |
 | Auth | **Better Auth** (email/password MVP) | Sessions / identity (locked) |
 | Database | **Neon** PostgreSQL + Prisma | Users, profiles, careers, skills, roadmaps, chat |
-| Vectors | **pgvector** on Neon | RAG embeddings store |
+| Vectors | **pgvector** on Neon | Structured data store |
 | Search | Postgres FTS + hybrid vector | Keyword + semantic |
 | AI | Vercel AI SDK + **OpenAI** (`gpt-4o-mini` + `text-embedding-3-small`) | Coach + roadmap + embeddings |
 | Hosting | **Vercel** + Neon | Hackathon deploy |
