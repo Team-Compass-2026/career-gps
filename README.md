@@ -59,7 +59,7 @@ LANDING → ASSESSMENT → ASSESSMENT RESULT → CAREER PATHWAY → NEXT MOVE �
 ## Technology Stack
 - **Framework:** Next.js 16 (App Router) + TypeScript 7
 - **Runtime:** Bun 1.3 (package manager + runtime)
-- **UI:** Tailwind CSS 4 + shadcn/ui
+- **UI:** Tailwind CSS 4 + shadcn/ui (base-nova style, Base UI primitives)
 - **Client data:** TanStack Query
 - **Auth:** Better Auth 1.7 (email/password MVP)
 - **Database:** Neon PostgreSQL + Prisma 7
@@ -84,8 +84,8 @@ career-gps/
 │       ├── gaps/page.tsx
 │       ├── roadmap/page.tsx
 │       └── coach/page.tsx
-├── components/             ← UI components
-├── lib/                    ← Utilities & validations
+├── components/ui/         ← shadcn/ui (base-nova style) — 20 components
+├── lib/utils.ts           ← cn() helper
 ├── prisma/                 ← Database schema
 ├── data/                   ← CSV + knowledge base
 ├── scripts/ingest-knowledge.ts  # post-scaffold
