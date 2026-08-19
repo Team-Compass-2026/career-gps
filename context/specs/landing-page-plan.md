@@ -5,16 +5,18 @@
 ## Brand Integration
 
 - **Product name:** Career GPS (hero-level on marketing)
-- **Tagline:** We stay with you until you do it
-- **Theme:** Human-Led Navigation · Modern EdTech + Professional Networking + Mentorship Community
-- **Visual language:** Trust → Connection → Guidance → Growth → Direction
+- **Tagline:** Stop guessing. Start building your career.
+- **Short tagline:** Your GPS for career decisions.
+- **Theme:** Career Navigation · Modern EdTech + clear guidance system
+- **Visual language:** Direction → Progress → Confidence → Clarity → Growth → Trust
 
 ## Color System — Career GPS Palette
 
-Brand colors per design system:
-- **Orange** — optimistic and successful (primary CTA, highlights)
-- **Blue** — professional and formal (navigation, active states)
-- **White** — clean and tidiness (backgrounds, cards)
+Brand colors per design system (`context/ui-context.md`):
+- **Compass Blue** — professional/formal (primary CTA, navigation, active states)
+- **Fresh Teal** — growth and progress (pathway highlights, success)
+- **Soft Amber** — encouragement (secondary highlights)
+- **White / soft surfaces** — clean and tidy (backgrounds, cards)
 
 Extended palette from design system:
 
@@ -162,20 +164,17 @@ Your personalized career pathway—from where you are today to where you want to
 ### Right Side — Career GPS Pathway Visualization
 
 ```
-Your Goal
+You are here
+Student · basic skills
+↓
+Destination
 Data Analyst
 ↓
-Skills
-SQL · Python · Visualization
-↓
-Projects
-Build your portfolio
-↓
-Experience
-Internship
-↓
-Career
-Data Analyst
+Route — Milestones
+Skills (SQL · Python · Visualization)
+→ Projects (Build your portfolio)
+→ Experience (Internship)
+→ Career (Data Analyst)
 ```
 
 Subtle compass element behind the interface.
@@ -196,7 +195,7 @@ Get matched with experienced mentors who understand your career journey.
 01 — Assess: Tell us where you are.
 02 — Navigate: Get your personalized career pathway.
 03 — Act: Take the right steps, one milestone at a time.
-04 — Grow: Track your progress and get expert guidance.
+04 — Grow: Track your progress and get AI (and later human) guidance.
 
 **Final CTA:** Ready to find your path? **Build My Career Pathway →**
 
@@ -231,7 +230,7 @@ INTERACTION DESIGN
 - Primary buttons: Compass Blue background, white text, 16px radius
 - Hover: slight upward movement, slightly darker blue, soft shadow
 - Cards: 16-20px radius, subtle shadow, lift on hover (`translateY(-4px)`)
-- Pathway animation: nodes transition Neutral → Blue → Teal as users progress through Discover → Connect → Talk → Plan → Grow
+- Pathway animation: nodes transition Neutral → Blue → Teal as users progress through Assess → Navigate → Act → Grow
 
 ## Accessibility
 
@@ -250,6 +249,10 @@ LANDING → ASSESSMENT → ASSESSMENT RESULT → CAREER PATHWAY → NEXT MOVE �
 
 All important buttons should navigate to the appropriate next screen.
 
+> Full page-by-page prototype brief: `context/prototype-spec.md`. The product
+> MVP core (see `context/product-spec.md`) is navigation-first; the demo
+> prototype showcases the mentor step.
+
 ## Dark Mode Support
 
 Full dark mode support per design system:
@@ -263,9 +266,10 @@ Full dark mode support per design system:
 
 ## Signature Interaction — Compass Path Animation
 
-When users scroll through Discover → Connect → Talk → Plan → Grow, the pathway progressively activates:
-- Nodes transition: Neutral → Blue → Teal
-- This becomes Team Compass's recognizable interaction pattern
+When users scroll through Assess → Navigate → Act → Grow, the pathway
+progressively activates:
+- Nodes transition: Neutral → Compass Blue → Teal
+- This becomes Career GPS's recognizable interaction pattern
 
 ## Brand Voice in UI
 
@@ -276,17 +280,18 @@ Use language that is:
 - Practical
 - Confident
 
-Preferred:
-- **Find a Mentor** instead of Start AI Career Analysis
-- **Start the Conversation** instead of Generate Career Recommendations
+Preferred (navigation language):
+- **Find Your Next Step** instead of Start AI Career Analysis
 - **Build Your Roadmap** instead of Optimize Your Career Strategy
+- **Mark Milestone Complete** instead of Update Progress Status
+- **Recalculate My Path** instead of Rerun Recommendation Engine
 
 ## Final Brand Feeling
 
 When someone visits Career GPS, they should feel:
-1. "I'm not alone."
-2. "There are people who can help me."
-3. "I can start a conversation."
+1. "I understand where I am."
+2. "I can see where I could go."
+3. "I know what I'm missing."
 4. "I know my next step."
 
-**Team Compass 🧭 — Real people. Real conversations. Real career direction.**
+**Team Compass 🧭 — Know where you are. Know where you're going. Know what to do next.**

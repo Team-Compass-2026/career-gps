@@ -19,6 +19,10 @@ or making any architectural decision:
    stage, team, and stack definition
 1. `context/project-setup.md` — onboarding guide, version/lifecycle
    management, and daily workflow
+2. `context/product-spec.md` — canonical Career GPS master spec
+   (problem, solution, MVP scope, data model, AI/RAG, business model, pitch)
+3. `context/prototype-spec.md` — high-fidelity clickable prototype brief
+   (6 pages: Landing → Assessment → Pathway → Next Step → Mentor → Progress)
 2. `docs/architecture/` — stack + RAG + Career Assistant + folders
    (`21-next-hono-prisma-query.md`, `25-rag-career-coach.md`,
    `26-ai-career-coach.md`, `27-folder-structure.md`) and

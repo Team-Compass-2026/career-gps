@@ -14,6 +14,10 @@ Once you've scaffolded this project (via `init-context.sh`), fill in the context
 | 6 | `ai-workflow-rules.md` | Agent behavior, scoping rules, verification expectations |
 | 7 | `progress-tracker.md` | Current phase, completed items, next steps, open questions |
 
+Optional canonical product spec: `product-spec.md` holds the full master
+specification (problem → MVP → data model → AI/RAG → business model → pitch);
+`project-overview.md` stays the distilled operational view that references it.
+
 ## Orchestration Loop
 
 If using P-Core Orchestra (Cursor/OpenCode), the loop auto-runs on build/fix/refactor prompts:

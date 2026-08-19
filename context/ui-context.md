@@ -2,24 +2,44 @@
 
 ## Product feel
 
-Calm, clear, mentor-like. Reduce anxiety; emphasize **clarity and next steps**.
+Calm, clear, navigator-like. Reduce anxiety; emphasize **clarity and next steps**.
 Avoid hype, "AI purple", or cluttered dashboards on first viewport.
 
 ## Brand
 
 - Product name **Career GPS** is hero-level on marketing
 - Team Compass🧭 secondary (about / footer)
-- Slogan: We stay with you until you do it
+- Primary tagline: **Stop guessing. Start building your career.**
+- Short tagline: **Your GPS for career decisions.**
+- Alternative: *Know where you are. Know where you want to go. Know what to do next.*
 
-## Theme — Human-Led Navigation
+## Theme — Career Navigation
 
-Product should feel like: **Modern EdTech + Professional Networking + Mentorship Community**
-It must NOT feel like a generic AI startup.
+Product should feel like: **Modern EdTech + a clear navigation system** — the
+product loop of Career GPS, not a generic AI startup.
 
-Visual language communicates: **Trust → Connection → Guidance → Growth → Direction**
+Visual language communicates: **Direction → Progress → Confidence → Clarity →
+Growth → Trust**
 
 Emotional journey:
-- "I'm confused." → "I can find someone who understands." → "I can talk to them." → "I know my next step."
+- "I'm confused." → "I understand where I am." → "I see where I can go." →
+  "I know my next step."
+
+## Navigation Metaphor
+
+Use subtle GPS/navigation concepts — compass, routes, waypoints, destination
+markers, milestones, coordinates. **Do not make the UI look like a literal
+Google Maps clone.**
+
+Brand language to use: your starting point, your destination, your pathway, your
+next step, career route, career milestones, skill gap, progress, explore,
+navigate, recalculate, career direction.
+
+Example: *"You are here. Let's find your next step."*
+
+UI style: modern, clean, friendly, professional, youth-oriented, trustworthy,
+accessible, AI-native. Avoid too corporate, too childish, too futuristic, or too
+visually complicated.
 
 ## Theme Strategy
 
@@ -191,13 +211,14 @@ Avoid compressing sections together. Career GPS should feel calm and intentional
 
 ## Key screens (MVP)
 
-1. Landing — brand, one headline, one CTA
+1. Landing — brand, one headline, one CTA, pathway visualization ("You are here → Goal → Route → Milestones")
 2. Auth — Better Auth sign-in/up
-3. Profile intake
-4. Career recommendations (fit % as guidance + why)
+3. Onboarding / profile intake
+4. Career recommendations (fit % as guidance + why / what's missing)
 5. Skill gap table
-6. Roadmap timeline
+6. Roadmap timeline (phases + milestones)
 7. AI assistant + citations
+8. Progress tracking (not started / in progress / completed)
 
 ## Responsive
 
