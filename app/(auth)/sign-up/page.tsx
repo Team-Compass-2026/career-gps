@@ -2,25 +2,46 @@
 
 import { useState, type FormEvent } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion } from "motion/react"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
+import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 
 export default function SignUpPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    toast.success("Account creation is coming soon")
-  }
-
-  function handleGoogle() {
-    toast("Continue with Google is coming soon")
+    if (loading) return
+    setLoading(true)
+    try {
+      const { error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        callbackURL: "/profile",
+      })
+      if (error) {
+        toast.error(error.message ?? "Unable to create account")
+        return
+      }
+      toast.success("Account created 🎉")
+      router.push("/profile")
+      router.refresh()
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -49,6 +70,8 @@ export default function SignUpPage() {
               autoComplete="name"
               placeholder="Alex Morgan"
               required
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               className="h-11"
             />
           </div>
@@ -61,6 +84,8 @@ export default function SignUpPage() {
               autoComplete="email"
               placeholder="you@email.com"
               required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               className="h-11"
             />
           </div>
@@ -75,6 +100,8 @@ export default function SignUpPage() {
                 minLength={8}
                 placeholder="At least 8 characters"
                 required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 className="h-11 pr-12"
               />
               <Button
@@ -95,9 +122,14 @@ export default function SignUpPage() {
 
           <Button
             type="submit"
+            disabled={loading}
             className="h-11 w-full rounded-xl text-base font-semibold"
           >
-            Create Account
+            {loading ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              "Create Account"
+            )}
           </Button>
         </form>
 
@@ -110,8 +142,8 @@ export default function SignUpPage() {
         <Button
           type="button"
           variant="outline"
-          onClick={handleGoogle}
-          className="h-11 w-full rounded-xl text-base"
+          disabled
+          className="h-11 w-full rounded-xl text-base opacity-70"
         >
           <svg className="size-4" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -131,7 +163,7 @@ export default function SignUpPage() {
               d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"
             />
           </svg>
-          Continue with Google
+          Continue with Google (coming soon)
         </Button>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">

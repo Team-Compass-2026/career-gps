@@ -20,7 +20,7 @@ version:
   current: 1.0.0
   channel: dev
   release_name: genesis
-  build_number: 001
+  build_number: 002
 
 theme:
   name: human-led-navigation
@@ -30,10 +30,10 @@ theme:
     - dark
 
 lifecycle:
-  stage: design
+  stage: build
   status: active
   started: 2026-08-10
-  updated: 2026-08-10
+  updated: 2026-08-20
 
 team:
   lead: Team Compass🧭

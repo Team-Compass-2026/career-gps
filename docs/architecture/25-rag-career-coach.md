@@ -55,3 +55,27 @@ retrieval citations (or clear general-advice labeling). Empty retrieval → abst
 - Assistant: `26-ai-career-coach.md`  
 - Domain skill: `.cursor/skills/careerpath-rag/SKILL.md`  
 - Seed: `data/README.md`
+
+## Implemented (current stage)
+
+- **Schema** — `KnowledgeDoc` (source unique, title, url, audience, published)
+  + `KnowledgeChunk` (docId FK, `field`, ordinal, heading, content, tokens,
+  `embedding vector(384)`). Migrations `20260820000834_init_knowledge_vector`
+  + `20260820000900_embedding_dim_384` applied to Neon (HNSW
+  `vector_cosine_ops` + GIN FTS `to_tsvector('english', content)`).
+- **Corpus** — `data/knowledge/*.md`, one file per canonical field:
+  `career_description, skill_requirements, learning_path, resources,
+  salary_data, mentor_profiles, faq` (YAML front matter + `## <field>`).
+- **Ingest** — `scripts/ingest-knowledge.ts` (parse → chunk ~400 tokens / 15%
+  overlap → embed → upsert doc + insert chunks). `--dry` verified: 7 docs,
+  13 chunks. Requires a live embeddings provider to run fully.
+- **Retrieval** — `lib/ai/rag.ts`: hybrid score `sim*0.7 + fts*0.3` on
+  `embedding <=> query` + `ts_rank_cd`, `field` filter, topK, returns
+  `RAGCitation[]`; **degrades gracefully** (empty citations) if embedding or
+  DB is unavailable — chat/coach still answer.
+- **Routes** — `app/api/ai/chat/route.ts` prepends retrieved context + returns
+  `citations`; `app/api/ai/coach/route.ts` = career-coach endpoint with RAG
+  citations + optional `field`.
+- **Embeddings** — provider `embed()` via `AI_BRAIN_EMBEDDING_URL` bridge or
+  OpenAI-compatible `/embeddings` (see `docs/integrations/pcore-brain.md`).
+  **Pending**: deploying `/v1/embeddings` on the pcore-brain bridge.

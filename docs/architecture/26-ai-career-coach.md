@@ -43,7 +43,12 @@ Career GPS uses a **provider-agnostic AI layer** (`lib/ai/provider.ts`) that sup
 
 The abstraction is **zero‑dependency** (uses `fetch` + `process.env` only) and can be swapped without code changes by changing `AI_PROVIDER` in the environment.
 
-The coach UI sends messages to the provider via the test route `app/api/ai/chat/route.ts`; the coach layer builds the prompt by prepending RAG‑retrieved context citations (see `retrieveKnowledge` tool) before calling `provider.complete()`.
+The coach UI sends messages to the provider via `app/api/ai/chat/route.ts`
+(assistant, RAG context + `citations`) and `app/api/ai/coach/route.ts`
+(career-coach, coaching prompt + RAG citations, optional `field` filter); the
+coach layer builds the prompt by prepending RAG‑retrieved context citations
+(see `lib/ai/rag.ts` `retrieveRAG`/`buildRAGContext`) before calling
+`provider.complete()`.
 
 ## Example prompt flow (coach layer)
 
@@ -75,22 +80,6 @@ All coach routes require **Better Auth** session.
 ## Non-goals (MVP)
 
 Fine‑tune, voice, unbounded web browse, CV/GitHub analysis tools.
-
-## Skills
-
-`.cursor/skills/careerpath-rag/SKILL.md`, `careerpath-domain/SKILL.md`
-
-- “Business admin → tech, Excel, 10h/week” → career options + gaps + order  
-- “Finished JavaScript, what’s next?” → gap/roadmap aware next step  
-- “Only 10h/week” → stretch timeline, prioritize high-importance gaps  
-
-## Auth
-
-All coach routes require **Better Auth** session.
-
-## Non-goals (MVP)
-
-Fine-tune, voice, unbounded web browse, CV/GitHub analysis tools.
 
 ## Skills
 

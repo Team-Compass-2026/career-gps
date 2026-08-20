@@ -78,7 +78,7 @@ Expected output: `"career-gps-online"` + model `"mimo-v2.5-free"` + `"healthy":t
 The provider abstraction handles **only** the backend (model selection + auth).  
 The **Career Coach** builds the prompt sent to the provider by:
 
-1. Retrieving relevant knowledge chunks via RAG (`retrieveKnowledge` tool).  
+1. Retrieving relevant knowledge chunks via RAG (`retrieveRAG` in `lib/ai/rag.ts`).  
 2. Prefixing the user’s question with the retrieved context citations.  
 3. Passing the combined prompt (system + user + context) as the `messages` array to `provider.complete()`.  
 
@@ -95,6 +95,24 @@ Assistant: [provider.complete(messages)] → returns assistant reply.
 ```
 
 This separation lets you swap the provider (OpenAI, OpenRouter, pcore-brain) without touching the coach’s RAG prompt logic.
+
+## Embeddings (RAG)
+
+RAG retrieval needs an embeddings provider. `provider.embed(texts)` resolves it by priority:
+
+1. `AI_BRAIN_EMBEDDING_URL` — bridge to an OpenAI‑compatible `/embeddings`
+   endpoint (e.g. the pcore-brain bridge at `https://pcore-brain.peterlianpi.site/v1`).
+   Uses the same auth as the brain (Bearer or Basic).
+   Model: `AI_BRAIN_EMBEDDING_MODEL` (default `text-embedding-3-small`).
+2. `AI_PROVIDER=openai` — OpenAI‑compatible `/embeddings` at `AI_OPENAI_BASE_URL`
+   with `AI_OPENAI_API_KEY` / `OPENAI_API_KEY`; model `AI_OPENAI_EMBEDDING_MODEL`.
+
+The DB vector column is `vector(384)` (migration `20260820000900_embedding_dim_384`),
+matching the free local model `all-MiniLM-L6-v2`. **Current stage**: the
+`/v1/embeddings` endpoint on the pcore-brain bridge (`bridge/app.py` of
+`P-Core-System/pcore-brain`) is not yet deployed — real ingest is pending it.
+`scripts/ingest-knowledge.ts --dry` passes; chat/coach routes answer without
+context until embeddings are live.
 
 ## Model selection + pool
 

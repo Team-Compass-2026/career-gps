@@ -2,14 +2,17 @@
 
 ## Current Phase
 
-- Design/planning · product reframe to **Career GPS navigation model** · app
-  shell scaffolded, core build not started
+- Active build (genesis) · connected dashboard MVP shipped client-side · Better
+  Auth wired (server + client + login pages) · RAG-grounded AI chat/coach routes
+  shipped · working tree commits up to `HEAD`; all local changes committed
 
 ## Current Goal
 
-- Finalize context against the new master spec (`context/product-spec.md`)
-- Keep the existing shell (Next 16 + Bun + shadcn/ui) as the base for the MVP
-  build: onboarding → recommendations → skill gaps → roadmap → coach → progress
+- Wire the live backend: apply auth/domain migration to Neon, persist the
+  dashboard store to Prisma per user, verify sign-in/sign-up end-to-end against
+  the live DB, then `bun run build` green + Vercel deploy
+- Auth MVP flow: `/sign-in` `/sign-up` (Better Auth client) → `/profile` intake
+  → recommendations → gaps → roadmap → coach → progress
 
 ## Completed
 
@@ -102,8 +105,48 @@ idempotent upserts, no-DB guard, `bunx prisma generate` ✅ + strict tsc ✅ +
   generated client lacked) and excluded standalone Bun tool `scripts/` from
   Next's tsconfig type-check (script targets Bun runtime + old schema API)
 
+- **RAG layer built (schema → corpus → ingest → retrieval → routes)**:
+  - Schema + migrations applied to Neon (`vector(384)`): `KnowledgeDoc`,
+    `KnowledgeChunk` (field, heading, content, tokens, embedding) + HNSW
+    `vector_cosine_ops` index + GIN FTS index (migration
+    `20260820000834_init_knowledge_vector`, dim resized via
+    `20260820000900_embedding_dim_384`) — verified via psql
+  - Curated corpus: `data/knowledge/{careers,skills,learning_paths,resources,
+    salaries,mentors,faq}.md` (front matter + H2 field sections; canonical
+    fields: career_description, skill_requirements, learning_path, resources,
+    salary_data, mentor_profiles, faq)
+  - Ingest: `scripts/ingest-knowledge.ts` (parse → chunk ~400 tokens/15% overlap
+    → embed → upsert doc + insert chunks; `--dry` verified: 7 docs, 13 chunks,
+    all 7 fields)
+  - Retrieval: `lib/ai/rag.ts` — hybrid FTS + vector k-NN (`sim*0.7 + fts*0.3`),
+    citations, graceful degrade when embedding/DB unavailable
+  - Routes: `app/api/ai/chat/route.ts` now prepends RAG context + returns
+    `citations`; new `app/api/ai/coach/route.ts` (coaching prompt + RAG
+    citations, optional `field` filter)
+  - Provider: `embed()` added to `lib/ai/provider.ts` (openai-compatible
+    `/embeddings` or `AI_BRAIN_EMBEDDING_URL` bridge) + `lib/ai/embeddings.ts`
+  - **Blocked**: embeddings endpoint on pcore-brain bridge not yet deployed
+    (subagent aborted x2); real ingest needs a live embeddings provider
+    (`AI_OPENAI_BASE_URL`+key or `AI_BRAIN_EMBEDDING_URL`) — `--dry` passes,
+    chat/coach routes answer without context until then
+- **Auth wired end-to-end (client side)**: `lib/auth-client.ts` (`createAuthClient`
+  from `better-auth/react`, `baseURL` = `NEXT_PUBLIC_APP_URL`); `/sign-in` and
+  `/sign-up` rewritten from "coming soon" placeholders to real Better Auth forms
+  (`signIn.email` / `signUp.email` with `callbackURL`), loading + error handling,
+  redirect to `/profile` (or `callbackUrl`) + `router.refresh()`, sonner toasts;
+  Google buttons explicitly disabled ("coming soon")
+- Vercel build fixes: `postinstall: "prisma generate"` (gitignored
+  `lib/generated/prisma`) + `next.config.js` gates `output: 'standalone'` to
+  non-Vercel only (Next 16.3 bug #96646 `.next/next-server.js.nft.json` ENOENT)
+
 ## In Progress
 
+- Apply DB schema + seed against live Neon (auth/domain tables currently have NO
+  migration — only the two knowledge/vector migrations exist; `prisma db push`
+  or new `migrate dev` needed before sign-in works)
+- Add demo/login usability: seeded demo user for a default login + server-side
+  session guards on the account-level `/api/ai/*` routes (proxy runs on edge and
+  only does cookie-presence checks)
 - Wire the connected dashboard MVP to the live backend (Better Auth session +
   Prisma): persist profile/recommendations/milestones per user, replace
   localStorage store when the DB path is live
@@ -115,11 +158,9 @@ idempotent upserts, no-DB guard, `bunx prisma generate` ✅ + strict tsc ✅ +
 - MVP vertical live: auth → profile intake → career recommend (explained) →
   skill gaps → roadmap → coach (cite-or-abstain) → progress (dashboard flow
   works client-side today; swap store persistence to Prisma)
-- Seed curated careers (10–20, incl. Data Analyst) + career_skills + resources
-  → seed file written; apply first migration + run `bun run db:seed` against a
-  live Neon DB to verify end-to-end
-- Finish `scripts/ingest-knowledge.ts` (WIP, targets Bun + vector column via
-  raw SQL; currently excluded from Next type-check)
+- Apply first migration for auth/domain tables + run `bun run db:seed` against a
+  live Neon DB to verify sign-in/sign-up + seed end-to-end
+- Seed a demo user (default login) so evaluators can sign in immediately
 - Unit tests for `lib/careers-data.ts` pure fns (fit/gap/roadmap/stats)
 - Landing page: run accessibility review + Alex demo path
 
