@@ -1,92 +1,86 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowRight, BookOpen, MessageCircle, Target } from "lucide-react"
+import { ArrowRight, BookOpen, Check, Compass, MessageCircle, Target } from "lucide-react"
 
+import { PageHeader } from "@/components/layout/page-header"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { PageHeader } from "@/components/layout/page-header"
-import { cn } from "@/lib/utils"
-
-type GapStatus = "on-track" | "partial" | "missing"
-
-type SkillGap = {
-  skill: string
-  note: string
-  current: string
-  target: string
-  progress: number
-  status: GapStatus
-  badge: string
-}
-
-const gaps: SkillGap[] = [
-  {
-    skill: "SQL",
-    note: "Almost there",
-    current: "Beginner",
-    target: "Intermediate",
-    progress: 40,
-    status: "partial",
-    badge: "Close the gap",
-  },
-  {
-    skill: "Python",
-    note: "Needs work",
-    current: "None",
-    target: "Intermediate",
-    progress: 0,
-    status: "missing",
-    badge: "Start now",
-  },
-  {
-    skill: "Data Visualization",
-    note: "New skill",
-    current: "None",
-    target: "Beginner",
-    progress: 0,
-    status: "missing",
-    badge: "Start now",
-  },
-  {
-    skill: "Statistics",
-    note: "On track",
-    current: "Beginner",
-    target: "Intermediate",
-    progress: 50,
-    status: "on-track",
-    badge: "On track",
-  },
-]
-
-const statusStyles: Record<GapStatus, { bar: string; badge: string }> = {
-  "on-track": { bar: "bg-teal", badge: "bg-teal-soft text-teal" },
-  partial: { bar: "bg-amber", badge: "bg-amber-soft text-amber" },
-  missing: { bar: "bg-muted-foreground", badge: "bg-muted text-muted-foreground" },
-}
+import { Card, CardContent } from "@/components/ui/card"
+import { useOnboarding } from "@/lib/onboarding-store"
+import { getCareer, getGaps, getRecommendedCareers } from "@/lib/careers-data"
 
 export default function SkillGapsPage() {
-  const onTrack = gaps.filter((gap) => gap.status === "on-track").length
-  const toFocus = gaps.length - onTrack
+  const { state } = useOnboarding()
+
+  const hasProfile =
+    state.profile.skills.length > 0 ||
+    state.profile.targetRole !== "" ||
+    state.profile.industry !== "" ||
+    state.profile.education !== ""
+
+  const selected = state.selectedCareerSlug ? getCareer(state.selectedCareerSlug) : null
+  const firstRecommendation = hasProfile ? getRecommendedCareers(state.profile)[0]?.career : null
+  const activeCareer = selected ?? firstRecommendation ?? null
+
+  if (!hasProfile || !activeCareer) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-5xl space-y-8">
+          <PageHeader
+            title="Skill Gaps"
+            description="What stands between you and your target career — and how to close each gap."
+          />
+          <Card>
+            <CardContent className="flex flex-col items-center gap-4 px-6 py-14 text-center">
+              <span className="flex size-14 items-center justify-center rounded-full bg-primary-soft text-primary">
+                <Target className="size-7" aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-lg font-bold text-foreground">No career selected yet</h2>
+                <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+                  Build your profile first, then pick a path — we&apos;ll compare your skills
+                  against what that career really needs.
+                </p>
+              </div>
+              <Button render={<Link href="/profile" />} className="h-11">
+                Build your profile
+                <ArrowRight aria-hidden="true" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  const gaps = getGaps(activeCareer, state.profile)
+  const inPlace = gaps.filter((gap) => gap.has).length
+  const toLearn = gaps.length - inPlace
+  const firstGap = gaps.find((gap) => !gap.has)
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl space-y-8">
         <PageHeader
           title="Skill Gaps"
-          description="What stands between you and Data Analyst — and how to close each gap."
+          description={`What stands between you and ${activeCareer.title} — and how to close each gap.`}
           actions={
             <>
               <Badge variant="outline" className="h-6 px-2.5">
-                Sample data
+                {selected ? "Selected path" : "Best match"}
               </Badge>
+              <Button variant="outline" render={<Link href="/recommend" />} className="h-11">
+                <Compass aria-hidden="true" />
+                Change path
+              </Button>
               <Button variant="outline" render={<Link href="/coach" />} className="h-11">
                 <MessageCircle aria-hidden="true" />
                 Talk to a Mentor
               </Button>
               <Button render={<Link href="/roadmap" />} className="h-11">
-                Open Roadmap
+                See how to close these
                 <ArrowRight aria-hidden="true" />
               </Button>
             </>
@@ -96,11 +90,12 @@ export default function SkillGapsPage() {
         <Alert>
           <Target aria-hidden="true" />
           <AlertTitle>
-            {gaps.length} gaps found · {onTrack} on track · {toFocus} to focus on
+            {gaps.length} required skills · {inPlace} in place · {toLearn} to learn
           </AlertTitle>
           <AlertDescription>
-            Your closest gaps are SQL and Statistics. Start with Python — it&apos;s the biggest
-            missing piece for Data Analyst roles.
+            {toLearn > 0 && firstGap
+              ? `Start with ${firstGap.skill} — it's the biggest missing piece for ${activeCareer.title} roles. A typical route takes ${activeCareer.estimatedTime.toLowerCase()} at your pace.`
+              : "Every required skill is already on your list — time to build proof, then start applying."}
           </AlertDescription>
         </Alert>
 
@@ -108,49 +103,37 @@ export default function SkillGapsPage() {
           {gaps.map((gap) => (
             <div
               key={gap.skill}
-              className="grid gap-4 px-5 py-5 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] md:items-center"
+              className="flex flex-col gap-4 px-5 py-5 sm:px-6 md:flex-row md:items-center md:justify-between"
             >
-              <div>
-                <h2 className="text-base font-bold text-foreground">{gap.skill}</h2>
-                <p className="mt-0.5 text-sm text-muted-foreground">{gap.note}</p>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between gap-3 text-xs">
-                  <span className="font-medium text-muted-foreground">
-                    {gap.current} <span aria-hidden="true">→</span> {gap.target}
-                  </span>
-                  <span className="font-semibold tabular-nums text-foreground">
-                    {gap.progress}%
-                  </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base font-bold text-foreground">{gap.skill}</h2>
+                  {gap.has ? (
+                    <Badge className="h-6 bg-teal-soft px-2.5 text-teal">
+                      <Check aria-hidden="true" />
+                      You&apos;ve got this
+                    </Badge>
+                  ) : (
+                    <Badge className="h-6 bg-amber-soft px-2.5 text-amber">
+                      <BookOpen aria-hidden="true" />
+                      To learn
+                    </Badge>
+                  )}
                 </div>
-                <div
-                  role="progressbar"
-                  aria-label={`${gap.skill} progress`}
-                  aria-valuenow={gap.progress}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted"
+                <p className="mt-1 text-sm text-muted-foreground">{gap.action}</p>
+              </div>
+              {!gap.has && gap.resource ? (
+                <Button
+                  variant="outline"
+                  className="h-10 shrink-0"
+                  render={
+                    <a href={gap.resource.url} target="_blank" rel="noreferrer" />
+                  }
                 >
-                  <div
-                    className={cn(
-                      "h-full rounded-full transition-all duration-500",
-                      statusStyles[gap.status].bar,
-                    )}
-                    style={{ width: `${gap.progress}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                <Badge className={cn("h-6 px-2.5", statusStyles[gap.status].badge)}>
-                  {gap.badge}
-                </Badge>
-                <Button variant="outline" size="sm" render={<Link href="/coach" />} className="h-10">
                   <BookOpen aria-hidden="true" />
-                  Resources
+                  {gap.resource.title}
                 </Button>
-              </div>
+              ) : null}
             </div>
           ))}
         </div>

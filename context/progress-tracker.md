@@ -61,21 +61,67 @@
   `active:` press feedback + `whileInView` scroll animations + reduced-motion
   respect; compass canvas perf guard (`shadows={false}`)
 - Coach chat upgraded: per-message timestamps on user + assistant bubbles
+- Curated seed dataset shipped: `prisma/seed.ts` (16 careers incl. Data Analyst
+  first, 117 CareerSkill entries across 54 shared skill names, 63 resources,
+  9 mentors w/ 3 featured) + `db:seed` script (`prisma db seed`) + Prisma 7
+  `migrations.seed` hook in `prisma.config.ts` (`bun prisma/seed.ts`);
+idempotent upserts, no-DB guard, `bunx prisma generate` ✅ + strict tsc ✅ +
+   `bun build --target bun` ✅
+- Landing sections shipped: `components/landing/explore-careers.tsx` (`id="explore"`,
+  6 career cards w/ industry + demand badges → `/recommend`, whileInView stagger),
+  `components/landing/social-proof.tsx` (stat band: 30+ paths, 1,200+ learners,
+  92% next step, 4.8★ rating), and HowItWorks upgraded to the compass-path
+  signature interaction — node colors Neutral → Compass Blue → Teal progressively
+  driven by `useScroll`/`useTransform` (staggered step windows), connecting line
+  draws as you scroll (mobile vertical / desktop horizontal), theme-reactive
+  palette ref, `useReducedMotion` static fallback, hover color-cycle kept; page
+  order Hero → Benefits → ExploreCareers → HowItWorks → SocialProof → FinalCta;
+  `bun run build` ✅ (14 routes, `/` static)
+- **Connected MVP dashboard flow shipped (client-side, localStorage)**: new
+  `lib/careers-data.ts` (8 curated careers incl. Data Analyst: required skills,
+  education fit, estimated time, entry-level flag, free learning resources;
+  pure logic: `getCareer`, `getRecommendedCareers` (skill match + industry +
+  education + experience heuristics, capped 96), `getGaps`, `getRoadmap`
+  (Foundations → Core skills → Portfolio & applications), `getProgressStats`);
+  new `lib/onboarding-store.tsx` (`OnboardingProvider` + `useOnboarding`,
+  React context + `useState` + `useEffect`, hydrates/persists under
+  `career-gps-profile-v1` in localStorage); dashboard layout wraps children in
+  provider + adds **Progress** nav item (`/progress`, TrendingUp icon); `/profile`
+  rewritten as real intake form (name, current role, target career select,
+  experience, education, industry, weekly hours, skill chips) → saves to store →
+  `/recommend`; `/recommend` computes explained fit % cards (animated bars, why-
+  you-fit bullets, "Select this path" → `/gaps`); `/gaps` computes has/gap status
+  per required skill (teal check vs amber "To learn" + resource link) → `/roadmap`;
+  `/roadmap` is phase-based with clickable milestone toggles persisted to store
+  (motion timeline retained); new `/progress` dashboard (career readiness,
+  skills, milestones, editable weekly-hours log, recent milestones, Continue →
+  roadmap/coach); empty states link back to `/profile`/`/recommend`; sonner
+  toasts on save/select/toggle/log; `bun run build` ✅ (**15 routes**, +`/progress`)
+- Build repair (pre-existing, out of task scope): regenerated stale Prisma
+  client (`bunx prisma generate` — schema had KnowledgeDoc/KnowledgeChunk the
+  generated client lacked) and excluded standalone Bun tool `scripts/` from
+  Next's tsconfig type-check (script targets Bun runtime + old schema API)
 
 ## In Progress
 
-- Decide whether the existing dashboard skeleton pages stay as MVP routes or
-  are replaced by the onboarding-first flow from `product-spec.md` §11.2
+- Wire the connected dashboard MVP to the live backend (Better Auth session +
+  Prisma): persist profile/recommendations/milestones per user, replace
+  localStorage store when the DB path is live
 - Reconcile demo prototype (mentor flow, `prototype-spec.md`) with the
   navigation-first product MVP core (`product-spec.md` §29)
 
 ## Next Up (when build resumes)
 
-- MVP vertical: auth → profile intake → career recommend (explained) → skill
-  gaps → roadmap → coach (cite-or-abstain) → progress
+- MVP vertical live: auth → profile intake → career recommend (explained) →
+  skill gaps → roadmap → coach (cite-or-abstain) → progress (dashboard flow
+  works client-side today; swap store persistence to Prisma)
 - Seed curated careers (10–20, incl. Data Analyst) + career_skills + resources
-- Landing page per `specs/landing-page-plan.md` with new copy
-- Run accessibility review + Alex demo path
+  → seed file written; apply first migration + run `bun run db:seed` against a
+  live Neon DB to verify end-to-end
+- Finish `scripts/ingest-knowledge.ts` (WIP, targets Bun + vector column via
+  raw SQL; currently excluded from Next type-check)
+- Unit tests for `lib/careers-data.ts` pure fns (fit/gap/roadmap/stats)
+- Landing page: run accessibility review + Alex demo path
 
 ## Open Questions
 

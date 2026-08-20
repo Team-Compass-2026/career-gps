@@ -2,12 +2,14 @@
 // Better Auth models follow @better-auth/prisma-adapter defaults.
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../lib/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 // ---------------------------------------------------------------------------
@@ -202,4 +204,40 @@ model ChatMessage {
   createdAt  DateTime @default(now())
 
   conversation CoachConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge base (RAG) — pgvector embeddings + Postgres FTS
+// NOTE: pgvector `vector` is a custom type, expressed via the `Unsupported`
+//       fallback. The `vector` extension is managed by the `extensions` field
+//       above (requires the `postgresqlExtensions` preview feature). FTS and the
+//       HNSW vector index are added as raw SQL in the migration (see 25-rag-career-coach).
+// ---------------------------------------------------------------------------
+
+model KnowledgeDoc {
+  id        String            @id @default(uuid())
+  source    String            @db.VarChar(255)
+  title     String            @db.VarChar(255)
+  url       String?           @db.VarChar(2048)
+  audience  String?           @db.VarChar(64)
+  published Boolean           @default(false)
+  updatedAt DateTime          @default(now()) @updatedAt
+  chunks    KnowledgeChunk[]
+}
+
+model KnowledgeChunk {
+  id        String                  @id @default(uuid())
+  docId     String
+  doc       KnowledgeDoc            @relation(fields: [docId], references: [id], onDelete: Cascade)
+  field     String                  @db.VarChar(48)
+  ordinal   Int
+  heading   String?                 @db.VarChar(255)
+  content   String
+  // pgvector column. Prisma has no native `vector` scalar, so we use `Unsupported`
+  // and operate on it via raw SQL ($queryRaw / $executeRaw) for similarity search.
+  embedding Unsupported("vector(384)")
+  tokens    Int?
+
+  @@index([docId])
+  @@index([field])
 }

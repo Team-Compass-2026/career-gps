@@ -9,18 +9,21 @@ import {
   Route,
   Sparkles,
   Target,
+  TrendingUp,
   UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { OnboardingProvider } from "@/lib/onboarding-store";
 
 const NAV_ITEMS = [
   { label: "My Profile", href: "/profile", icon: UserRound },
   { label: "Recommendations", href: "/recommend", icon: Sparkles },
   { label: "Skill Gaps", href: "/gaps", icon: Target },
   { label: "Roadmap", href: "/roadmap", icon: Route },
+  { label: "Progress", href: "/progress", icon: TrendingUp },
   { label: "Career Coach", href: "/coach", icon: MessagesSquare },
 ];
 
@@ -99,7 +102,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1">
+          <OnboardingProvider>{children}</OnboardingProvider>
+        </main>
       </div>
     </div>
   );

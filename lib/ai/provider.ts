@@ -11,9 +11,14 @@ export interface AICompleteOptions {
   maxTokens?: number;
 }
 
+export interface AIEmbedOptions {
+  model?: string;
+}
+
 export interface AIProvider {
   readonly name: string;
   complete(messages: AIMessage[], options?: AICompleteOptions): Promise<string>;
+  embed(texts: string[], options?: AIEmbedOptions): Promise<number[][]>;
   health(): Promise<boolean>;
 }
 
@@ -32,6 +37,8 @@ export class AIProviderError extends Error {
     this.status = status;
   }
 }
+
+export class EmbeddingProviderError extends AIProviderError {}
 
 const DEFAULT_BRAIN_URL = "https://pcore-brain.peterlianpi.site";
 const DEFAULT_OPENAI_URL = "https://api.openai.com/v1";
@@ -83,6 +90,10 @@ export class OpenAICompatibleProvider implements AIProvider {
     return this.env.AI_OPENAI_MODEL || this.env.AI_MODEL;
   }
 
+  get embeddingModel(): string {
+    return this.env.AI_OPENAI_EMBEDDING_MODEL || this.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small";
+  }
+
   async complete(messages: AIMessage[], options: AICompleteOptions = {}): Promise<string> {
     const model = options.model || this.model;
     if (!model) {
@@ -106,6 +117,32 @@ export class OpenAICompatibleProvider implements AIProvider {
     const content = data.choices?.[0]?.message?.content;
     if (!content) throw new AIProviderError("openai provider: empty completion response");
     return content;
+  }
+
+  async embed(texts: string[], options: AIEmbedOptions = {}): Promise<number[][]> {
+    if (!texts.length) {
+      throw new EmbeddingProviderError("openai provider: no input texts provided for embedding");
+    }
+    const apiKey = this.apiKey;
+    if (!apiKey) {
+      throw new EmbeddingProviderError("openai provider: no API key configured (set AI_OPENAI_API_KEY or OPENAI_API_KEY)");
+    }
+    const model = options.model || this.embeddingModel;
+    const body: Record<string, unknown> = { input: texts, model };
+    const res = await fetch(`${this.baseURL}/embeddings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+    const data = (await parseResponse(res)) as { data?: Array<{ embedding?: unknown }> };
+    const vectors = (data.data ?? []).map((d) => d.embedding).filter((v): v is number[] => Array.isArray(v));
+    if (!vectors.length) {
+      throw new EmbeddingProviderError(`openai provider: no embeddings returned for ${texts.length} input(s)`);
+    }
+    return vectors;
   }
 
   async health(): Promise<boolean> {
@@ -148,6 +185,18 @@ export class PCoreBrainProvider implements AIProvider {
 
   get configured(): boolean {
     return this.auth.auth !== "none";
+  }
+
+  get embeddingModel(): string {
+    return this.env.AI_BRAIN_EMBEDDING_MODEL || "text-embedding-3-small";
+  }
+
+  get embeddingBridgeURL(): string | undefined {
+    return this.env.AI_BRAIN_EMBEDDING_URL;
+  }
+
+  get embedConfigured(): boolean {
+    return Boolean(this.embeddingBridgeURL && this.auth.header);
   }
 
   private async request(path: string, init: RequestInit = {}, timeoutMs = 20_000): Promise<unknown> {
@@ -200,6 +249,40 @@ export class PCoreBrainProvider implements AIProvider {
     return reply;
   }
 
+  async embed(texts: string[], options: AIEmbedOptions = {}): Promise<number[][]> {
+    if (!texts.length) {
+      throw new EmbeddingProviderError("pcore-brain: no input texts provided for embedding");
+    }
+    const bridge = this.embeddingBridgeURL;
+    if (!bridge) {
+      throw new EmbeddingProviderError(
+        "pcore-brain does not support embeddings; set AI_PROVIDER=openai for embeddings (or set AI_BRAIN_EMBEDDING_URL to bridge to an embeddings endpoint)",
+      );
+    }
+    const authHeader = this.auth.header;
+    if (!authHeader) {
+      throw new EmbeddingProviderError(
+        "pcore-brain embedding bridge: no auth configured (set AI_BRAIN_TOKEN or AI_BRAIN_AUTH_USER/AI_BRAIN_AUTH_PASS)",
+      );
+    }
+    const model = options.model || this.embeddingModel;
+    const body: Record<string, unknown> = { input: texts, model };
+    const res = await fetch(`${bridge}/embeddings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader,
+      },
+      body: JSON.stringify(body),
+    });
+    const data = (await parseResponse(res)) as { data?: Array<{ embedding?: unknown }> };
+    const vectors = (data.data ?? []).map((d) => d.embedding).filter((v): v is number[] => Array.isArray(v));
+    if (!vectors.length) {
+      throw new EmbeddingProviderError("pcore-brain embedding bridge: no embeddings returned");
+    }
+    return vectors;
+  }
+
   async health(): Promise<boolean> {
     try {
       const data = (await this.request("/global/health", {}, 10_000)) as { healthy?: boolean };
@@ -245,4 +328,32 @@ export function getAIProviderInfo(env: NodeJS.ProcessEnv = process.env): AIProvi
     };
   }
   return { name: provider.name, baseURL: "", auth: "none", configured: false };
+}
+
+export interface AIEmbeddingsInfo {
+  provider: string;
+  baseURL: string;
+  model: string;
+  configured: boolean;
+}
+
+export function getEmbeddingsInfo(env: NodeJS.ProcessEnv = process.env): AIEmbeddingsInfo {
+  const provider = createAIProvider(env);
+  if (provider instanceof OpenAICompatibleProvider) {
+    return {
+      provider: provider.name,
+      baseURL: provider.baseURL,
+      model: provider.embeddingModel,
+      configured: Boolean(provider.apiKey),
+    };
+  }
+  if (provider instanceof PCoreBrainProvider) {
+    return {
+      provider: provider.name,
+      baseURL: provider.embeddingBridgeURL || "not-supported",
+      model: provider.embeddingModel,
+      configured: provider.embedConfigured,
+    };
+  }
+  return { provider: provider.name, baseURL: "", model: "text-embedding-3-small", configured: false };
 }
